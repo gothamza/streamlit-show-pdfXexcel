@@ -4,11 +4,13 @@ import os
 from streamlit_pdf_viewer import pdf_viewer
 import pypdf
 
+
 # Initialize session state for page number and total pages
 if 'current_page' not in st.session_state:
     st.session_state.current_page = 1
 if 'total_pages' not in st.session_state:
     st.session_state.total_pages = 0
+
 
 uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
 

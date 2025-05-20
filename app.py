@@ -6,11 +6,13 @@ import json
 
 st.title("Excel Sheet Viewer (with Formulas)")
 
+
 # Initialize session state for the temporary file path and sheet data
 if 'temp_file_path' not in st.session_state:
     st.session_state.temp_file_path = None
 if 'sheet_data' not in st.session_state:
     st.session_state.sheet_data = None
+
 
 uploaded_excel = st.file_uploader("Upload Excel", type=["xlsx", "xls"], key="excel_uploader")
 
