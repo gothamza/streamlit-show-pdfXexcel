@@ -10,6 +10,7 @@ if 'current_page' not in st.session_state:
 if 'total_pages' not in st.session_state:
     st.session_state.total_pages = 0
 
+
 uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
 
 if uploaded_file:
