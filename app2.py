@@ -11,13 +11,18 @@ if 'total_pages' not in st.session_state:
     st.session_state.total_pages = 0
 
 uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
+
 if uploaded_file:
     # Read the PDF to get the total number of pages
     try:
         pdf_reader = pypdf.PdfReader(uploaded_file)
         st.session_state.total_pages = len(pdf_reader.pages)
-        # Reset to the first page when a new file is uploaded
-        st.session_state.current_page = 1
+        # Reset to the first page when a new file is uploaded, only if it's a new file
+        # This check prevents resetting page number when navigating
+        if 'last_uploaded_file_id' not in st.session_state or st.session_state.last_uploaded_file_id != uploaded_file.file_id:
+             st.session_state.current_page = 1
+             st.session_state.last_uploaded_file_id = uploaded_file.file_id
+
         uploaded_file.seek(0) # Reset file pointer after reading pages
     except Exception as e:
         st.error(f"Error reading PDF: {e}")
@@ -25,7 +30,6 @@ if uploaded_file:
         st.session_state.current_page = 1
 
     if st.session_state.total_pages > 0:
-        binary_data = uploaded_file.getvalue()
 
         # Display navigation buttons
         col1, col2, col3 = st.columns([1, 2, 1])
@@ -33,17 +37,18 @@ if uploaded_file:
             if st.button('Previous Page'):
                 if st.session_state.current_page > 1:
                     st.session_state.current_page -= 1
+                    st.experimental_rerun() # Force rerun to update display immediately
         with col2:
-            # Display current page and total pages, or use a number input
-            # For simplicity, let's display for now.
+            # Display current page and total pages
             st.write(f"Page {st.session_state.current_page} of {st.session_state.total_pages}")
-            # Or use a number input to jump to a specific page:
-            # page_input = st.number_input(label='Go to page:', min_value=1, max_value=st.session_state.total_pages, value=st.session_state.current_page, step=1)
-            # st.session_state.current_page = page_input
+
         with col3:
             if st.button('Next Page'):
                 if st.session_state.current_page < st.session_state.total_pages:
                     st.session_state.current_page += 1
+                    st.experimental_rerun() # Force rerun to update display immediately
+
+        binary_data = uploaded_file.getvalue()
 
         # Display the current page using streamlit-pdf-viewer
         # pdf_viewer renders pages based on 1-based index, so we pass a list with the current page
