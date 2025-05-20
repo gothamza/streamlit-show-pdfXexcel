@@ -37,7 +37,7 @@ if uploaded_file:
             if st.button('Previous Page'):
                 if st.session_state.current_page > 1:
                     st.session_state.current_page -= 1
-                    st.experimental_rerun() # Force rerun to update display immediately
+                    st.rerun() # Use st.rerun() instead of st.experimental_rerun()
         with col2:
             # Display current page and total pages
             st.write(f"Page {st.session_state.current_page} of {st.session_state.total_pages}")
@@ -46,7 +46,7 @@ if uploaded_file:
             if st.button('Next Page'):
                 if st.session_state.current_page < st.session_state.total_pages:
                     st.session_state.current_page += 1
-                    st.experimental_rerun() # Force rerun to update display immediately
+                    st.rerun() # Use st.rerun() instead of st.experimental_rerun()
 
         binary_data = uploaded_file.getvalue()
 
